@@ -4,15 +4,15 @@ export default function Login({ onLogin, darkMode, setDarkMode }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLogin, setIsLogin] = useState(true);
-  const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const API_URL = 'https://chatech-backend-2.onrender.com';
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);
     setError('');
+    setLoading(true);
 
     try {
       const endpoint = isLogin ? '/api/auth/login' : '/api/auth/register';
@@ -29,11 +29,10 @@ export default function Login({ onLogin, darkMode, setDarkMode }) {
         return;
       }
 
-      localStorage.setItem('token', data.token);
-      localStorage.setItem('user', JSON.stringify(data.user));
       onLogin(data.token, data.user);
     } catch (err) {
-      setError('Error de conexión: ' + err.message);
+      setError('Error de conexión. Intenta de nuevo.');
+      console.error(err);
     } finally {
       setLoading(false);
     }
@@ -42,7 +41,10 @@ export default function Login({ onLogin, darkMode, setDarkMode }) {
   return (
     <div className="login-container">
       <div className="theme-toggle">
-        <button className="theme-toggle-btn" onClick={() => setDarkMode(!darkMode)}>
+        <button 
+          className="theme-toggle-btn" 
+          onClick={() => setDarkMode(!darkMode)}
+        >
           {darkMode ? '☀️' : '🌙'}
         </button>
       </div>
@@ -60,6 +62,7 @@ export default function Login({ onLogin, darkMode, setDarkMode }) {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
+            disabled={loading}
           />
           <input
             type="password"
@@ -67,25 +70,27 @@ export default function Login({ onLogin, darkMode, setDarkMode }) {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
+            disabled={loading}
           />
-
-          {error && <p className="error-message">{error}</p>}
-
           <button type="submit" disabled={loading}>
-            {loading ? 'Cargando...' : isLogin ? 'Ingresar' : 'Registrarse'}
+            {loading ? 'Cargando...' : (isLogin ? 'Iniciar sesión' : 'Registrarse')}
           </button>
         </form>
 
+        {error && <div className="error-message">{error}</div>}
+
         <div className="login-footer">
-          <p>
-            {isLogin ? '¿No tienes cuenta?' : '¿Ya tienes cuenta?'}
-            <button
-              type="button"
-              onClick={() => setIsLogin(!isLogin)}
-            >
-              {isLogin ? 'Registrate' : 'Ingresa'}
-            </button>
-          </p>
+          {isLogin ? (
+            <>
+              ¿No tienes cuenta?{' '}
+              <button onClick={() => setIsLogin(false)}>Regístrate</button>
+            </>
+          ) : (
+            <>
+              ¿Ya tienes cuenta?{' '}
+              <button onClick={() => setIsLogin(true)}>Inicia sesión</button>
+            </>
+          )}
         </div>
       </div>
     </div>
