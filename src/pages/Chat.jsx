@@ -7,7 +7,7 @@ export default function Chat({ user, token, onLogout, darkMode, setDarkMode }) {
   const [showChat, setShowChat] = useState(false);
   const messagesEndRef = useRef(null);
 
-  const API_URL = 'http://localhost:5001';
+  const API_URL = 'https://chatech-backend-2.onrender.com';
 
   useEffect(() => {
     loadHistory();
