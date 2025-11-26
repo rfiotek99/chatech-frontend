@@ -7,7 +7,7 @@ export default function Login({ onLogin, darkMode, setDarkMode }) {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const API_URL = 'https://chatech-backend-2.onrender.com';
+  const API_URL = 'https://chatech-backend-1.onrender.com';
 
   const handleSubmit = async (e) => {
     e.preventDefault();
